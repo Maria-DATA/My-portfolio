@@ -1,0 +1,13 @@
+SELECT 	c.companyname, 
+		n.reportingdate, 
+		n.netearnings AS Net_Earnings,
+		(n.netearnings-c.preferredstock/c.outstandingshares)as EPS, -- formula to calculate current month EPS
+FROM 	['Company $']as c
+INNER JOIN ['Net Earnings$'] as N ON c.companyid=n.companyid AND n.year = 1990
+-- subquery to ensure that we only pick companies that operate in 'South' region
+AND EXISTS (SELECT 	1 
+			FROM 	[dbo].Reg$ AS r
+            WHERE  	r.companyid = c.companyid
+			AND 	r.region = 'South')
+WHERE c.status code = 'Operating' -- only active companies are considered by the query
+ORDER BY companyname, reportingdate;
